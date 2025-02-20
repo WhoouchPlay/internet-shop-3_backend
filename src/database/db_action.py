@@ -55,17 +55,16 @@ def add_review_by_product(prod_id: str, text: str, grade: str):
     db.session.commit()
 
 
-def add_user(email: str, password: str, first_name: str|None = None, last_name: str|None = None):
+def add_user(email: str, password: str, name: str|None = None):
     user = User(
         id=uuid4().hex,
-        first_name=first_name,
-        last_name=last_name,
+        name=name,
         email=email,
         password=password
     )
     db.session.add(user)
     db.session.commit()
-    return "йцукенгшщзхїфівапролджєячсмитьбю."
+    return "Ви успішно увійшли в систему."
 
 
 def get_tokens(email: str, password: str) -> dict:

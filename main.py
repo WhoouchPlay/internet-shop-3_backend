@@ -93,7 +93,6 @@ class UserAPI(Resource):
         parser.add_argument("name")
         parser.add_argument("password")
         parser.add_argument("email")
-        args = parser.parse_args()
         kwargs = parser.parse_args()
         msg = db_action.add_user(**kwargs)
         resp = jsonify(msg)
