@@ -73,4 +73,4 @@ def get_tokens(email: str, password: str) -> dict:
 
 
 def get_user(user_id: str):
-    user = db.one_or_404(db.session.query(User).where(User.id == user_id))
+    return db.one_or_404(db.session.query(User).where(User.id == user_id))

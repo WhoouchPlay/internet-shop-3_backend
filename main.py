@@ -72,7 +72,7 @@ class ProductAPI(Resource):
 
     def delete(self, prod_id: str):
         db_action.del_product(prod_id)
-        return jsonify("Товар успішно видалено"), 204
+        return jsonify("Товар успішно `видалено"), 204
 
 class ReviewAPI(Resource):
     pass
@@ -83,9 +83,12 @@ class UserAPI(Resource):
     def get(self):
         user_id = get_jwt_identity()
         user = db_action.get_user(user_id)
-        куіз = куіз.json
-        del user["password"]
-        return куіз
+        resp = jsonify(user)
+        user = resp.json
+        del user["_password"]
+        resp = jsonify(user)
+        resp.status_code = 200
+        return resp
 
 
     def post(self):
