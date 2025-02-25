@@ -69,7 +69,7 @@ def add_user(email: str, password: str, name: str|None = None):
 
 def get_tokens(email: str, password: str) -> dict:
     user = db.one_or_404(db.session.query(User).where(User.email == email))
-    return user.get_tokens(password)
+    return user.create_tokens(password)
 
 
 def get_user(user_id: str):

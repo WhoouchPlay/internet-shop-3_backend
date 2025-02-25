@@ -22,10 +22,11 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 db.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
+jwt_managet = JWTManager(app)
 
-with app.app_context():
+# with app.app_context():
 #     db.drop_all()
-    db.create_all()
+    # db.create_all()
 #     get_products()
 
 
@@ -89,7 +90,7 @@ class UserAPI(Resource):
         resp = jsonify(user)
         resp.status_code = 200
         return resp
-
+    
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -101,11 +102,10 @@ class UserAPI(Resource):
         resp = jsonify(msg)
         resp.status_code = 201
         return resp
-    
 
 
 class ToknAPI(Resource):
-    @jwt_required
+    @jwt_required(refresh=True)
     def get(self):
         user_id = get_jwt_identity()
         token = dict(access_token = create_access_token(identity=user_id))
@@ -114,12 +114,23 @@ class ToknAPI(Resource):
         return resp
     
 
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("email")
+        parser.add_argument("password")
+        kwargs = parser.parse_args()
+        tokens = db_action.get_tokens(**kwargs)
+        resp = jsonify(tokens)
+        resp.status_code = 200
+        return resp
+    
 
 
 
-api.add_resource(ProductAPI, "/api/products", "/api/products/<prod_id>")
+
+api.add_resource(ProductAPI, "/api/products/", "/api/products/<prod_id>/")
 api.add_resource(UserAPI, "/api/users/")
-api.add_resource(ToknAPI, "/api/tokens")
+api.add_resource(ToknAPI, "/api/tokens/")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
